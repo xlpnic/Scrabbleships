@@ -639,7 +639,7 @@
 
         </Border>
 
-        <Button Grid.Row="2" Content="LET'S GO!" FontSize="20" FontWeight="Bold" Padding="2" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Button Command="{Binding OnGoButtonClicked}" Grid.Row="2" Content="LET'S GO!" FontSize="20" FontWeight="Bold" Padding="2" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
     </Grid>
 </UserControl>

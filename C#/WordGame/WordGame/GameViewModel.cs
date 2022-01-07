@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Text.RegularExpressions;
+    using System.Linq;
+    using System.Windows.Input;
 
     public class GameViewModel : IGamePage, INotifyPropertyChanged
     {
@@ -40,7 +41,7 @@
 
         (int xCoord, int yCoord) EarliestStartingLetterCoords;
 
-        Dictionary<(int, int), char> LettersEntered;
+        Dictionary<(int xcoord, int ycoord), char> LettersEntered;
 
         public GameViewModel()
         {
@@ -74,44 +75,181 @@
             this.e4BoxText = string.Empty;
             this.e5BoxText = string.Empty;
 
-            string[,] grid = new string[5,5];
+            //string[,] grid = new string[5,5];
 
-            grid[0, 0] = this.a1BoxText;
-            grid[1, 0] = this.a2BoxText;
-            grid[2, 0] = this.a3BoxText;
-            grid[3, 0] = this.a4BoxText;
-            grid[4, 0] = this.a5BoxText;
+            //grid[0, 0] = this.a1BoxText;
+            //grid[1, 0] = this.a2BoxText;
+            //grid[2, 0] = this.a3BoxText;
+            //grid[3, 0] = this.a4BoxText;
+            //grid[4, 0] = this.a5BoxText;
 
-            grid[0, 1] = this.b1BoxText;
-            grid[1, 1] = this.b2BoxText;
-            grid[2, 1] = this.b3BoxText;
-            grid[3, 1] = this.b4BoxText;
-            grid[4, 1] = this.b5BoxText;
+            //grid[0, 1] = this.b1BoxText;
+            //grid[1, 1] = this.b2BoxText;
+            //grid[2, 1] = this.b3BoxText;
+            //grid[3, 1] = this.b4BoxText;
+            //grid[4, 1] = this.b5BoxText;
 
-            grid[0, 2] = this.c1BoxText;
-            grid[1, 2] = this.c2BoxText;
-            grid[2, 2] = this.c3BoxText;
-            grid[3, 2] = this.c4BoxText;
-            grid[4, 2] = this.c5BoxText;
+            //grid[0, 2] = this.c1BoxText;
+            //grid[1, 2] = this.c2BoxText;
+            //grid[2, 2] = this.c3BoxText;
+            //grid[3, 2] = this.c4BoxText;
+            //grid[4, 2] = this.c5BoxText;
 
-            grid[0, 3] = this.d1BoxText;
-            grid[1, 3] = this.d2BoxText;
-            grid[2, 3] = this.d3BoxText;
-            grid[3, 3] = this.d4BoxText;
-            grid[4, 3] = this.d5BoxText;
+            //grid[0, 3] = this.d1BoxText;
+            //grid[1, 3] = this.d2BoxText;
+            //grid[2, 3] = this.d3BoxText;
+            //grid[3, 3] = this.d4BoxText;
+            //grid[4, 3] = this.d5BoxText;
 
-            grid[0, 4] = this.e1BoxText;
-            grid[1, 4] = this.e2BoxText;
-            grid[2, 4] = this.e3BoxText;
-            grid[3, 4] = this.e4BoxText;
-            grid[4, 4] = this.e5BoxText;
+            //grid[0, 4] = this.e1BoxText;
+            //grid[1, 4] = this.e2BoxText;
+            //grid[2, 4] = this.e3BoxText;
+            //grid[3, 4] = this.e4BoxText;
+            //grid[4, 4] = this.e5BoxText;
 
             // TODO: When a letter is set, check it's coords against this and set it if it's closer to the top left of the grid.
             // This might be hard because if the player deletes the starting letter, will need to work out from the reamining entered letters which is now the start...
             EarliestStartingLetterCoords = (0, 0);
 
-            //TODO: rather than doing that, maybe just keep track of the coords of each letter. Then we can check the coords to make sure they are all in a line. Then check the dictioanry.
-            LettersEntered = new Dictionary<(int, int), char> ();
+            LettersEntered = new Dictionary<(int xcoord, int ycoord), char> ();
+
+            this.OnGoButtonClicked = new DelegateCommand<object>(this.ValidateWord);
+        }
+
+        public ICommand OnGoButtonClicked { get; }
+
+        private bool wordIsValid;
+
+        public bool WordIsValid
+        {
+            get => wordIsValid;
+            set
+            {
+                wordIsValid = value;
+                this.OnPropertyChanged(nameof(this.WordIsValid));
+            }
+        }
+
+        public void ValidateWord(object obj)
+        {
+            if (LettersEntered.Count <= 1)
+            {
+                WordIsValid = false;
+            }
+
+            var firstLetterCoords = GetFirstLetterCoords();
+
+            var wordIsHorizontal = false;
+            var wordIsVertical = false;
+
+            foreach (var letter in LettersEntered)
+            {
+                if (letter.Key.xcoord != firstLetterCoords.xcoord
+                    && letter.Key.ycoord != firstLetterCoords.ycoord)
+                {
+                    // Found a letter that is not in the same row/column as the first letter.
+                    WordIsValid = false;
+                }
+
+                if (letter.Key.ycoord == firstLetterCoords.ycoord
+                    && letter.Key.xcoord != firstLetterCoords.xcoord )
+                {
+                    wordIsHorizontal = true;
+                }
+
+                if (letter.Key.xcoord == firstLetterCoords.xcoord 
+                    && letter.Key.ycoord != firstLetterCoords.ycoord)
+                {
+                    wordIsVertical = true;
+                }
+            }
+
+            if (wordIsHorizontal && wordIsVertical)
+            {
+                // Word must be either horizontal or vertical.
+                WordIsValid = false;
+            }
+
+            var word = string.Empty;
+
+            if (wordIsHorizontal)
+            {
+                var xcoords = LettersEntered.Keys.Select(k => k.xcoord).ToList();
+                xcoords.Sort();
+
+                var lengthOfWord = xcoords.Count;
+
+                var expectedLastXCoord = xcoords[0] + lengthOfWord - 1;
+
+                if (xcoords.Last() != expectedLastXCoord)
+                {
+                    // If these don't match, there must be a space in the word somewhere.
+                    WordIsValid = false;
+                }
+
+                foreach(var letterXCoord in xcoords)
+                {
+                    var coord = (letterXCoord, firstLetterCoords.ycoord);
+                    var letter = LettersEntered[coord];
+
+                    word += letter;
+                }
+            }
+            else 
+            {
+                var ycoords = LettersEntered.Keys.Select(k => k.ycoord).ToList();
+                ycoords.Sort();
+
+                var lengthOfWord = ycoords.Count;
+
+                var expectedLastYCoord = ycoords[0] + lengthOfWord - 1;
+
+                if (ycoords.Last() != expectedLastYCoord)
+                {
+                    // If these don't match, there must be a space in the word somewhere.
+                    WordIsValid = false;
+                }
+
+                foreach (var letterYCoord in ycoords)
+                {
+                    var coord = (letterYCoord, firstLetterCoords.xcoord);
+                    var letter = LettersEntered[coord];
+
+                    word += letter;
+                }
+            }
+
+            // If here, word is in a single line, we know if it's vertrical or horizontal, and we know there are no spaces in the word.
+            // Next, check word in dictionary.
+            WordIsValid = WordIsAValidWord(word);
+        }
+
+        private bool WordIsAValidWord(string word)
+        {
+            // TODO: validate word in dictioanry.
+            return true;
+        }
+
+        private (int xcoord, int ycoord) GetFirstLetterCoords()
+        {
+            bool gotAFirstLetter = false;
+            (int xcoord, int ycoord) firstLetter = (-1, -1);
+
+            foreach (var coords in LettersEntered.Keys)
+            {
+                if (!gotAFirstLetter)
+                {
+                    firstLetter = coords;
+                    gotAFirstLetter = true;
+                }
+                else if (coords.xcoord <= firstLetter.xcoord 
+                    && coords.ycoord <= firstLetter.ycoord)
+                {
+                    firstLetter = coords;
+                }
+            }
+
+            return firstLetter;
         }
 
         private void SetEarliestLetterIfNeeded(int x, int y)
