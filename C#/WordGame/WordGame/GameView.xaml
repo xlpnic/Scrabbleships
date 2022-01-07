@@ -15,7 +15,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"  Text="~*Game View*~" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Row="0"  Text="Add a word to the grid..." Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center"/>
 
         <Border Grid.Row="1"  Margin="2" HorizontalAlignment="Center" BorderThickness="1" BorderBrush="LightSkyBlue">
 
