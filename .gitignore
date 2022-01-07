@@ -12,3 +12,6 @@
 /captures
 .externalNativeBuild
 .cxx
+C#/WordGame/WordGame/obj/Debug/WordGame.g.resources
+*.exe
+C#/WordGame/WordGame/obj/Debug/*
