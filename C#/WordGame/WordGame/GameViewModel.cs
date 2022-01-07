@@ -1,5 +1,6 @@
 ﻿namespace WordGame
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -227,7 +228,46 @@
         private bool WordIsAValidWord(string word)
         {
             // TODO: validate word in dictioanry.
-            return true;
+
+            int initialCapacity = 82765;
+            int maxEditDistanceDictionary = 2; //maximum edit distance per dictionary precalculation
+            var symSpell = new SymSpell(initialCapacity, maxEditDistanceDictionary);
+
+            //load dictionary
+            //string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            //string dictionaryPath = baseDirectory + "../../../../SymSpell/frequency_dictionary_en_82_765.txt";
+            var dictionaryPath = @"D:\Dev\Scrabbleships\C#\WordGame\WordGame\frequency_dictionary_en_82_765.txt";
+            int termIndex = 0; //column of the term in the dictionary text file
+            int countIndex = 1; //column of the term frequency in the dictionary text file
+            if (!symSpell.LoadDictionary(dictionaryPath, termIndex, countIndex))
+            {
+                Console.WriteLine("File not found!");
+                //press any key to exit program
+                Console.ReadKey();
+                return false;
+            }
+
+            int maxEditDistanceLookup = 1; //max edit distance per lookup (maxEditDistanceLookup<=maxEditDistanceDictionary)
+            var suggestionVerbosity = SymSpell.Verbosity.Top; //Top, Closest, All
+            var suggestions = symSpell.Lookup(word.ToLower(), suggestionVerbosity, maxEditDistanceLookup);
+
+            //display suggestions, edit distance and term frequency
+            //foreach (var suggestion in suggestions)
+            //{
+            //    Console.WriteLine(suggestion.term + " " + suggestion.distance.ToString() + " " + suggestion.count.ToString("N0"));
+            //}
+
+            if (!suggestions.Any())
+            {
+                return false;
+            }
+
+            if (suggestions.First().term.ToUpper() == word.ToUpper())
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private (int xcoord, int ycoord) GetFirstLetterCoords()
