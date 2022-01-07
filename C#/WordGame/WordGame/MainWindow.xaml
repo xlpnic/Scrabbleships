@@ -1,0 +1,26 @@
+﻿<Window x:Class="WordGame.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:WordGame="clr-namespace:WordGame"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    
+    <Window.Resources>
+
+        <DataTemplate DataType="{x:Type WordGame:GameViewModel}">
+            <WordGame:GameView/>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Window.DataContext>
+        <WordGame:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <ContentControl Content="{Binding CurrentGamePageViewModel}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+    </Grid>
+    
+</Window>
