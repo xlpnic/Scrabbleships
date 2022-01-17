@@ -43,6 +43,8 @@
         private (int xCoord, int yCoord) EarliestStartingLetterCoords;
         private readonly Dictionary<(int xcoord, int ycoord), char> LettersEntered;
 
+        public TileViewModel TileC1;
+
         public OpponentBoardViewModel()
         {
             this.a1BoxText = string.Empty;
@@ -116,6 +118,8 @@
             this.OnC1TileClicked = new DelegateCommand<object>(this.C1Clicked);
 
             this.c1ButtonVisible = true;
+
+            this.TileC1 = new TileViewModel();
         }
 
         public ICommand OnC1TileClicked { get; }
@@ -136,8 +140,7 @@
         {
             if (!string.IsNullOrEmpty(this.c1BoxText))
             {
-                // Show letter
-                // Hide button for this cell
+                // Show letter by hiding button for this cell
                 this.C1ButtonVisible = false;
             }
             else

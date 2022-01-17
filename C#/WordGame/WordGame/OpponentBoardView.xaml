@@ -11,6 +11,11 @@
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <DataTemplate DataType="{x:Type WordGame:TileViewModel}">
+            <WordGame:Tile />
+        </DataTemplate>
+        
     </UserControl.Resources>
 
     <Grid>
@@ -218,6 +223,17 @@
                                HorizontalAlignment="Stretch" />
                 </Border>
 
+                <!--<WordGame:Tile Grid.Row="2"
+                               Grid.Column="0"/>-->
+
+                <!--<ContentControl Grid.Row="2"
+                                Grid.Column="0"
+                                Content="{Binding TileC1}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch" />-->
+
                 <Border Grid.Row="2"
                         Grid.Column="0"
                         BorderThickness="1"
@@ -236,7 +252,7 @@
                                    TextAlignment="Center"
                                    VerticalAlignment="Stretch"
                                    HorizontalAlignment="Stretch" />
-                        
+
                         <Button Grid.Row="0"
                                 Command="{Binding OnC1TileClicked}"
                                 Content=""

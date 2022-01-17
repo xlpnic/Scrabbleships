@@ -17,6 +17,10 @@
             <WordGame:OpponentBoardView/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type WordGame:TileViewModel}">
+            <WordGame:Tile />
+        </DataTemplate>
+
     </Window.Resources>
 
     <Window.DataContext>
