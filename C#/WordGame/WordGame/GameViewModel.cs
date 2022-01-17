@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Input;
 
     public class GameViewModel : IGamePage, INotifyPropertyChanged
@@ -136,6 +137,8 @@
             if (LettersEntered.Count <= 1)
             {
                 WordIsValid = false;
+                ShowInvalidWordMessage();
+                return;
             }
 
             var firstLetterCoords = GetFirstLetterCoords();
@@ -150,6 +153,8 @@
                 {
                     // Found a letter that is not in the same row/column as the first letter.
                     WordIsValid = false;
+                    ShowInvalidWordMessage();
+                    return;
                 }
 
                 if (letter.Key.ycoord == firstLetterCoords.ycoord
@@ -169,6 +174,8 @@
             {
                 // Word must be either horizontal or vertical.
                 WordIsValid = false;
+                ShowInvalidWordMessage();
+                return;
             }
 
             var word = string.Empty;
@@ -186,6 +193,8 @@
                 {
                     // If these don't match, there must be a space in the word somewhere.
                     WordIsValid = false;
+                    ShowInvalidWordMessage();
+                    return;
                 }
 
                 foreach(var letterXCoord in xcoords)
@@ -209,6 +218,8 @@
                 {
                     // If these don't match, there must be a space in the word somewhere.
                     WordIsValid = false;
+                    ShowInvalidWordMessage();
+                    return;
                 }
 
                 foreach (var letterYCoord in ycoords)
@@ -222,10 +233,22 @@
 
             // If here, word is in a single line, we know if it's vertrical or horizontal, and we know there are no spaces in the word.
             // Next, check word in dictionary.
-            WordIsValid = WordIsAValidWord(word);
+            WordIsValid = WordIsInDictionary(word);
+
+            if (!WordIsValid)
+            {
+                ShowInvalidWordMessage();
+                return;
+            }
         }
 
-        private bool WordIsAValidWord(string word)
+        private static void ShowInvalidWordMessage()
+        {
+            // Note - if you set an icon on this message box, it will do the annoying beep sound when the message box appears.
+            MessageBox.Show("The word you entered is not a real word! Please try again.", "Not a real word!", MessageBoxButton.OK, MessageBoxImage.None,MessageBoxResult.OK);
+        }
+
+        private bool WordIsInDictionary(string word)
         {
             // TODO: validate word in dictioanry.
 
