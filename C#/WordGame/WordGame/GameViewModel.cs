@@ -213,7 +213,7 @@
 
                 foreach (var letterYCoord in ycoords)
                 {
-                    var coord = (letterYCoord, firstLetterCoords.xcoord);
+                    var coord = (firstLetterCoords.xcoord, letterYCoord);
                     var letter = LettersEntered[coord];
 
                     word += letter;
