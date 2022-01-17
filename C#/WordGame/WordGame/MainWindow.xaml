@@ -13,6 +13,10 @@
             <WordGame:GameView/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type WordGame:OpponentBoardViewModel}">
+            <WordGame:OpponentBoardView/>
+        </DataTemplate>
+
     </Window.Resources>
 
     <Window.DataContext>

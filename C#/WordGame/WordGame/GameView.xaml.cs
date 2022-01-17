@@ -11,31 +11,31 @@
     /// </summary>
     public partial class GameView : UserControl
     {
-        readonly Regex allowedCharactersRegex;
+        private readonly Regex allowedCharactersRegex;
 
         public GameView()
         {
-            InitializeComponent();
-            allowedCharactersRegex = new Regex(@"^[A-Z]$");
+            this.InitializeComponent();
+            this.allowedCharactersRegex = new Regex(@"^[A-Z]$");
         }
 
         private void LetterBox_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var t = (TextBox)sender;
+            TextBox t = (TextBox)sender;
             t.Background = new SolidColorBrush(Colors.Yellow);
         }
 
         private void LetterBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            var t = (TextBox)sender;
+            TextBox t = (TextBox)sender;
             t.Background = new SolidColorBrush(Colors.White);
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            var key = e.Key.ToString();
-            var matches = allowedCharactersRegex.Matches(key);
-            var t = (TextBox)sender;
+            string key = e.Key.ToString();
+            MatchCollection matches = this.allowedCharactersRegex.Matches(key);
+            TextBox t = (TextBox)sender;
 
             if (matches.Count == 1)
             {

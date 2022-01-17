@@ -3,11 +3,11 @@
     using System.Windows.Controls;
 
     /// <summary>
-    /// Interaction logic for LetterBox.xaml
+    /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class LetterBox : UserControl
+    public partial class OpponentBoardView : UserControl
     {
-        public LetterBox()
+        public OpponentBoardView()
         {
             this.InitializeComponent();
         }

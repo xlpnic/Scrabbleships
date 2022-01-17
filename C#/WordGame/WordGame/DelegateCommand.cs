@@ -21,7 +21,9 @@
         public bool CanExecute(object parameter)
         {
             if (this.canExecute == null)
+            {
                 return true;
+            }
 
             return this.canExecute((T)parameter);
         }

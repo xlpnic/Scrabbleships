@@ -1,13 +1,10 @@
 ﻿namespace WordGame
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
-    using System.Windows;
     using System.Windows.Input;
 
-    public class GameViewModel : IGamePage, INotifyPropertyChanged
+    public class OpponentBoardViewModel : IGamePage, INotifyPropertyChanged
     {
         private string a1BoxText;
         private string a2BoxText;
@@ -39,12 +36,14 @@
         private string e4BoxText;
         private string e5BoxText;
 
+        private bool c1ButtonVisible;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private (int xCoord, int yCoord) EarliestStartingLetterCoords;
         private readonly Dictionary<(int xcoord, int ycoord), char> LettersEntered;
 
-        public GameViewModel()
+        public OpponentBoardViewModel()
         {
             this.a1BoxText = string.Empty;
             this.a2BoxText = string.Empty;
@@ -58,11 +57,11 @@
             this.b4BoxText = string.Empty;
             this.b5BoxText = string.Empty;
 
-            this.c1BoxText = string.Empty;
-            this.c2BoxText = string.Empty;
-            this.c3BoxText = string.Empty;
-            this.c4BoxText = string.Empty;
-            this.c5BoxText = string.Empty;
+            this.c1BoxText = "B";
+            this.c2BoxText = "?";
+            this.c3BoxText = "N";
+            this.c4BoxText = "G";
+            this.c5BoxText = "?";
 
             this.d1BoxText = string.Empty;
             this.d2BoxText = string.Empty;
@@ -114,10 +113,12 @@
 
             this.LettersEntered = new Dictionary<(int xcoord, int ycoord), char>();
 
-            this.OnGoButtonClicked = new DelegateCommand<object>(this.ValidateWord);
+            this.OnC1TileClicked = new DelegateCommand<object>(this.C1Clicked);
+
+            this.c1ButtonVisible = true;
         }
 
-        public ICommand OnGoButtonClicked { get; }
+        public ICommand OnC1TileClicked { get; }
 
         private bool wordIsValid;
 
@@ -131,187 +132,19 @@
             }
         }
 
-        public void ValidateWord(object obj)
+        public void C1Clicked(object obj)
         {
-            if (this.LettersEntered.Count <= 1)
+            if (!string.IsNullOrEmpty(this.c1BoxText))
             {
-                this.WordIsValid = false;
-                ShowInvalidWordMessage();
-                return;
-            }
-
-            (int xcoord, int ycoord) firstLetterCoords = this.GetFirstLetterCoords();
-
-            bool wordIsHorizontal = false;
-            bool wordIsVertical = false;
-
-            foreach (KeyValuePair<(int xcoord, int ycoord), char> letter in this.LettersEntered)
-            {
-                if (letter.Key.xcoord != firstLetterCoords.xcoord
-                    && letter.Key.ycoord != firstLetterCoords.ycoord)
-                {
-                    // Found a letter that is not in the same row/column as the first letter.
-                    this.WordIsValid = false;
-                    ShowInvalidWordMessage();
-                    return;
-                }
-
-                if (letter.Key.ycoord == firstLetterCoords.ycoord
-                    && letter.Key.xcoord != firstLetterCoords.xcoord)
-                {
-                    wordIsHorizontal = true;
-                }
-
-                if (letter.Key.xcoord == firstLetterCoords.xcoord
-                    && letter.Key.ycoord != firstLetterCoords.ycoord)
-                {
-                    wordIsVertical = true;
-                }
-            }
-
-            if (wordIsHorizontal && wordIsVertical)
-            {
-                // Word must be either horizontal or vertical.
-                this.WordIsValid = false;
-                ShowInvalidWordMessage();
-                return;
-            }
-
-            string word = string.Empty;
-
-            if (wordIsHorizontal)
-            {
-                List<int> xcoords = this.LettersEntered.Keys.Select(k => k.xcoord).ToList();
-                xcoords.Sort();
-
-                int lengthOfWord = xcoords.Count;
-
-                int expectedLastXCoord = xcoords[0] + lengthOfWord - 1;
-
-                if (xcoords.Last() != expectedLastXCoord)
-                {
-                    // If these don't match, there must be a space in the word somewhere.
-                    this.WordIsValid = false;
-                    ShowInvalidWordMessage();
-                    return;
-                }
-
-                foreach (int letterXCoord in xcoords)
-                {
-                    (int letterXCoord, int ycoord) coord = (letterXCoord, firstLetterCoords.ycoord);
-                    char letter = this.LettersEntered[coord];
-
-                    word += letter;
-                }
+                // Show letter
+                // Hide button for this cell
+                this.C1ButtonVisible = false;
             }
             else
             {
-                List<int> ycoords = this.LettersEntered.Keys.Select(k => k.ycoord).ToList();
-                ycoords.Sort();
-
-                int lengthOfWord = ycoords.Count;
-
-                int expectedLastYCoord = ycoords[0] + lengthOfWord - 1;
-
-                if (ycoords.Last() != expectedLastYCoord)
-                {
-                    // If these don't match, there must be a space in the word somewhere.
-                    this.WordIsValid = false;
-                    ShowInvalidWordMessage();
-                    return;
-                }
-
-                foreach (int letterYCoord in ycoords)
-                {
-                    (int xcoord, int letterYCoord) coord = (firstLetterCoords.xcoord, letterYCoord);
-                    char letter = this.LettersEntered[coord];
-
-                    word += letter;
-                }
+                // Show 'miss' image
+                // Hide button for this cell
             }
-
-            // If here, word is in a single line, we know if it's vertrical or horizontal, and we know there are no spaces in the word.
-            // Next, check word in dictionary.
-            this.WordIsValid = this.WordIsInDictionary(word);
-
-            if (!this.WordIsValid)
-            {
-                ShowInvalidWordMessage();
-                return;
-            }
-        }
-
-        private static void ShowInvalidWordMessage()
-        {
-            // Note - if you set an icon on this message box, it will do the annoying beep sound when the message box appears.
-            MessageBox.Show("The word you entered is not a real word!\nPlease try again.", "Not a real word!", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
-        }
-
-        private bool WordIsInDictionary(string word)
-        {
-            // TODO: validate word in dictioanry.
-
-            int initialCapacity = 82765;
-            int maxEditDistanceDictionary = 2; //maximum edit distance per dictionary precalculation
-            SymSpell symSpell = new SymSpell(initialCapacity, maxEditDistanceDictionary);
-
-            //load dictionary
-            //string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            //string dictionaryPath = baseDirectory + "../../../../SymSpell/frequency_dictionary_en_82_765.txt";
-            string dictionaryPath = @"D:\Dev\Scrabbleships\C#\WordGame\WordGame\frequency_dictionary_en_82_765.txt";
-            int termIndex = 0; //column of the term in the dictionary text file
-            int countIndex = 1; //column of the term frequency in the dictionary text file
-            if (!symSpell.LoadDictionary(dictionaryPath, termIndex, countIndex))
-            {
-                Console.WriteLine("File not found!");
-                //press any key to exit program
-                Console.ReadKey();
-                return false;
-            }
-
-            int maxEditDistanceLookup = 1; //max edit distance per lookup (maxEditDistanceLookup<=maxEditDistanceDictionary)
-            SymSpell.Verbosity suggestionVerbosity = SymSpell.Verbosity.Top; //Top, Closest, All
-            List<SymSpell.SuggestItem> suggestions = symSpell.Lookup(word.ToLower(), suggestionVerbosity, maxEditDistanceLookup);
-
-            //display suggestions, edit distance and term frequency
-            //foreach (var suggestion in suggestions)
-            //{
-            //    Console.WriteLine(suggestion.term + " " + suggestion.distance.ToString() + " " + suggestion.count.ToString("N0"));
-            //}
-
-            if (!suggestions.Any())
-            {
-                return false;
-            }
-
-            if (suggestions.First().term.ToUpper() == word.ToUpper())
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private (int xcoord, int ycoord) GetFirstLetterCoords()
-        {
-            bool gotAFirstLetter = false;
-            (int xcoord, int ycoord) firstLetter = (-1, -1);
-
-            foreach ((int xcoord, int ycoord) coords in this.LettersEntered.Keys)
-            {
-                if (!gotAFirstLetter)
-                {
-                    firstLetter = coords;
-                    gotAFirstLetter = true;
-                }
-                else if (coords.xcoord <= firstLetter.xcoord
-                    && coords.ycoord <= firstLetter.ycoord)
-                {
-                    firstLetter = coords;
-                }
-            }
-
-            return firstLetter;
         }
 
         private void SetEarliestLetterIfNeeded(int x, int y)
@@ -549,6 +382,16 @@
                 {
                     this.RemoveLetter(0, 2);
                 }
+            }
+        }
+
+        public bool C1ButtonVisible
+        {
+            get => this.c1ButtonVisible;
+            set
+            {
+                this.c1ButtonVisible = value;
+                this.OnPropertyChanged(nameof(this.C1ButtonVisible));
             }
         }
 

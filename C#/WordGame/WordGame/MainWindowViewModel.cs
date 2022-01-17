@@ -9,8 +9,11 @@
 
         public MainWindowViewModel()
         {
-            var gameViewModel = new GameViewModel();
-            this.currentGamePageViewModel = gameViewModel;
+            //var initialGameViewModel = new GameViewModel();
+
+            OpponentBoardViewModel initialGameViewModel = new OpponentBoardViewModel();
+
+            this.currentGamePageViewModel = initialGameViewModel;
         }
 
         public IGamePage CurrentGamePageViewModel
