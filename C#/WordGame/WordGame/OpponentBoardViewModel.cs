@@ -125,11 +125,15 @@
 
             this.OnGuessClicked = new DelegateCommand<object>(this.GuessClicked);
 
+            this.OnCloseWrongGuessMessageClicked = new DelegateCommand<object>(this.CloseWrongGuessMessageClicked);
+
             this.c1ButtonVisible = true;
 
             this.overlayEnabled = true;
 
             this.guessWordBoxVisible = false;
+
+            this.wrongGuessMessageVisible = false;
 
             this.TileC1 = new TileViewModel();
         }
@@ -143,6 +147,8 @@
         public ICommand OnCancelGuessAWordClicked { get; }
 
         public ICommand OnGuessClicked { get; }
+
+        public ICommand OnCloseWrongGuessMessageClicked { get; }
 
         private bool wordIsValid;
 
@@ -187,6 +193,11 @@
             this.GuessWordBoxVisible = false;
         }
 
+        public void CloseWrongGuessMessageClicked(object obj)
+        {
+            this.WrongGuessMessageVisible = false;
+        }
+
         public void GuessClicked(object obj)
         {
             bool guessIsCorrect = this.CheckGuess();
@@ -202,6 +213,8 @@
                 // Show incorrect guess message
 
                 // End turn
+
+                this.WrongGuessMessageVisible = true;
             }
 
             this.GuessWordBoxVisible = false;
@@ -210,6 +223,18 @@
         private bool CheckGuess()
         {
             return false;
+        }
+
+        private bool wrongGuessMessageVisible;
+
+        public bool WrongGuessMessageVisible
+        {
+            get => this.wrongGuessMessageVisible;
+            set
+            {
+                this.wrongGuessMessageVisible = value;
+                this.OnPropertyChanged(nameof(this.WrongGuessMessageVisible));
+            }
         }
 
         private bool guessWordBoxVisible;

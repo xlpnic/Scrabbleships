@@ -602,6 +602,41 @@
 
                 </Grid>
 
+                <Grid Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="5"
+                        Grid.RowSpan="6"
+                        Visibility="{Binding WrongGuessMessageVisible, Converter={StaticResource BoolToVis}}">
+
+                    <Rectangle Fill="LightYellow"
+                               Opacity=".8" />
+
+                    <Grid HorizontalAlignment="Center"
+                          VerticalAlignment="Center">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Text="Nope! You guessed wrong!"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="Purple" />
+
+                        <Button Grid.Row="2"
+                                Content="OK"
+                                FontWeight="Bold"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="Purple"
+                                Command="{Binding OnCloseWrongGuessMessageClicked}" />
+                    </Grid>
+
+                </Grid>
+
             </Grid>
 
         </Border>
