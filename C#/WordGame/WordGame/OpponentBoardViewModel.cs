@@ -119,9 +119,17 @@
 
             this.OnGuessALetterClicked = new DelegateCommand<object>(this.GuessALetterClicked);
 
+            this.OnGuessAWordClicked = new DelegateCommand<object>(this.GuessAWordClicked);
+
+            this.OnCancelGuessAWordClicked = new DelegateCommand<object>(this.CancelGuessAWordClicked);
+
+            this.OnGuessClicked = new DelegateCommand<object>(this.GuessClicked);
+
             this.c1ButtonVisible = true;
 
             this.overlayEnabled = true;
+
+            this.guessWordBoxVisible = false;
 
             this.TileC1 = new TileViewModel();
         }
@@ -129,6 +137,12 @@
         public ICommand OnC1TileClicked { get; }
 
         public ICommand OnGuessALetterClicked { get; }
+
+        public ICommand OnGuessAWordClicked { get; }
+
+        public ICommand OnCancelGuessAWordClicked { get; }
+
+        public ICommand OnGuessClicked { get; }
 
         private bool wordIsValid;
 
@@ -161,6 +175,53 @@
         public void GuessALetterClicked(object obj)
         {
             this.OverlayEnabled = false;
+        }
+
+        public void GuessAWordClicked(object obj)
+        {
+            this.GuessWordBoxVisible = true;
+        }
+
+        public void CancelGuessAWordClicked(object obj)
+        {
+            this.GuessWordBoxVisible = false;
+        }
+
+        public void GuessClicked(object obj)
+        {
+            bool guessIsCorrect = this.CheckGuess();
+
+            if (guessIsCorrect)
+            {
+                // Show correct guess message
+
+                // Reveal word on grid
+            }
+            else
+            {
+                // Show incorrect guess message
+
+                // End turn
+            }
+
+            this.GuessWordBoxVisible = false;
+        }
+
+        private bool CheckGuess()
+        {
+            return false;
+        }
+
+        private bool guessWordBoxVisible;
+
+        public bool GuessWordBoxVisible
+        {
+            get => this.guessWordBoxVisible;
+            set
+            {
+                this.guessWordBoxVisible = value;
+                this.OnPropertyChanged(nameof(this.GuessWordBoxVisible));
+            }
         }
 
         private bool overlayEnabled;

@@ -547,7 +547,58 @@
                     <Button Grid.Column="1"
                             Content="Guess a Word!"
                             Margin="2"
-                            HorizontalAlignment="Stretch"/>
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding OnGuessAWordClicked}"/>
+
+                </Grid>
+
+                <Grid Grid.Row="5"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="5"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="Gray"
+                      Visibility="{Binding GuessWordBoxVisible, Converter={StaticResource BoolToVis}}">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.67*" />
+                        <ColumnDefinition Width="0.33*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Text="Have a guess!"
+                               Foreground="Orange"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="2" />
+
+                    <Button Grid.Row="0"
+                            Grid.Column="1"
+                            Content="X"
+                            FontWeight="Bold"
+                            HorizontalAlignment="Right"
+                            Foreground="White"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Command="{Binding OnCancelGuessAWordClicked}"/>
+
+                    <TextBox Grid.Row="1"
+                             Grid.Column="0"
+                             Margin="2"/>
+
+                    <Button Grid.Row="1"
+                            Grid.Column="1"
+                            Content="Guess"
+                            FontWeight="Bold"
+                            Margin="2"
+                            Command="{Binding OnGuessClicked}" />
 
                 </Grid>
 
