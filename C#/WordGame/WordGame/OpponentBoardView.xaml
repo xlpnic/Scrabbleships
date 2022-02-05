@@ -7,7 +7,7 @@
              d:DataContext="{d:DesignInstance Type=WordGame:OpponentBoardViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="450">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -19,6 +19,7 @@
     </UserControl.Resources>
 
     <Grid>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -26,18 +27,18 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Text="Add a word to the grid..."
+                   Text="Sink your opponent's word-ships!"
                    Foreground="Green"
                    FontWeight="Bold"
                    HorizontalAlignment="Center" />
 
         <Border Grid.Row="1"
                 Margin="2"
-                HorizontalAlignment="Center"
-                BorderThickness="1"
-                BorderBrush="LightSkyBlue">
+                HorizontalAlignment="Center">
 
-            <Grid HorizontalAlignment="Center">
+            <Grid HorizontalAlignment="Center"
+                  Background="AliceBlue">
+                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -45,7 +46,9 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -237,9 +240,12 @@
                 <Border Grid.Row="2"
                         Grid.Column="0"
                         BorderThickness="1"
-                        BorderBrush="LightSkyBlue">
+                        BorderBrush="LightSkyBlue"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
 
-                    <Grid>
+                    <Grid HorizontalAlignment="Center"
+                          VerticalAlignment="Center">
 
                         <TextBlock Grid.Row="0"
                                    Text="{Binding C1BoxText, UpdateSourceTrigger=PropertyChanged}"
@@ -276,7 +282,9 @@
                 <Border Grid.Row="2"
                         Grid.Column="1"
                         BorderThickness="1"
-                        BorderBrush="LightSkyBlue">
+                        BorderBrush="LightSkyBlue"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
 
                     <TextBlock Text="{Binding C2BoxText, UpdateSourceTrigger=PropertyChanged}"
                                AllowDrop="False"
@@ -511,9 +519,43 @@
                                HorizontalAlignment="Stretch" />
                 </Border>
 
+
+                <Rectangle Grid.Row="0"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="5"
+                           Grid.RowSpan="5"
+                           Fill="LightGray"
+                           Opacity=".5"
+                           Visibility="{Binding OverlayEnabled, Converter={StaticResource BoolToVis}}"/>
+
+                <Grid Grid.Row="5"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="5"
+                      HorizontalAlignment="Stretch">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" 
+                            Content="Guess a Letter!"
+                            Margin="2"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding OnGuessALetterClicked}"/>
+
+                    <Button Grid.Column="1"
+                            Content="Guess a Word!"
+                            Margin="2"
+                            HorizontalAlignment="Stretch"/>
+
+                </Grid>
+
             </Grid>
 
         </Border>
+
+
 
     </Grid>
 </UserControl>

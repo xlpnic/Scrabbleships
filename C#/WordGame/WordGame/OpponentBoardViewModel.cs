@@ -117,12 +117,18 @@
 
             this.OnC1TileClicked = new DelegateCommand<object>(this.C1Clicked);
 
+            this.OnGuessALetterClicked = new DelegateCommand<object>(this.GuessALetterClicked);
+
             this.c1ButtonVisible = true;
+
+            this.overlayEnabled = true;
 
             this.TileC1 = new TileViewModel();
         }
 
         public ICommand OnC1TileClicked { get; }
+
+        public ICommand OnGuessALetterClicked { get; }
 
         private bool wordIsValid;
 
@@ -147,6 +153,25 @@
             {
                 // Show 'miss' image
                 // Hide button for this cell
+            }
+
+            this.OverlayEnabled = true;
+        }
+
+        public void GuessALetterClicked(object obj)
+        {
+            this.OverlayEnabled = false;
+        }
+
+        private bool overlayEnabled;
+
+        public bool OverlayEnabled
+        {
+            get => this.overlayEnabled;
+            set
+            {
+                this.overlayEnabled = value;
+                this.OnPropertyChanged(nameof(this.OverlayEnabled));
             }
         }
 
