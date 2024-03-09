@@ -59,12 +59,6 @@
             this.b4BoxText = string.Empty;
             this.b5BoxText = string.Empty;
 
-            this.c1BoxText = "B";
-            this.c2BoxText = "?";
-            this.c3BoxText = "N";
-            this.c4BoxText = "G";
-            this.c5BoxText = "?";
-
             this.d1BoxText = string.Empty;
             this.d2BoxText = string.Empty;
             this.d3BoxText = string.Empty;
@@ -136,6 +130,35 @@
             this.wrongGuessMessageVisible = false;
 
             this.TileC1 = new TileViewModel();
+
+            this.SetOpponentsWord();
+        }
+
+        private void SetOpponentsWord()
+        {
+            var opponentsWord = "BINGO";
+            var chars = opponentsWord.ToCharArray();
+
+
+            this.C1BoxText = IsVowel(chars[0]) ? "?" : chars[0].ToString();
+            this.C2BoxText = IsVowel(chars[1]) ? "?" : chars[1].ToString();
+            this.C3BoxText = IsVowel(chars[2]) ? "?" : chars[2].ToString();
+            this.C4BoxText = IsVowel(chars[3]) ? "?" : chars[3].ToString();
+            this.C5BoxText = IsVowel(chars[4]) ? "?" : chars[4].ToString();
+        }
+
+        private static bool IsVowel(char charProvided)
+        {
+            if (charProvided.Equals('A') ||
+                charProvided.Equals('E') ||
+                charProvided.Equals('I') ||
+                charProvided.Equals('O') ||
+                charProvided.Equals('U'))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public ICommand OnC1TileClicked { get; }
