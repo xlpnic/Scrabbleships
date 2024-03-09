@@ -1,5 +1,8 @@
-﻿namespace WordGame
+﻿using System;
+
+namespace WordGame
 {
+    using System.IO;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows.Input;
@@ -37,6 +40,7 @@
         private string e5BoxText;
 
         private bool c1ButtonVisible;
+        private bool c2ButtonVisible;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -111,6 +115,8 @@
 
             this.OnC1TileClicked = new DelegateCommand<object>(this.C1Clicked);
 
+            this.OnC2TileClicked = new DelegateCommand<object>(this.C2Clicked);
+
             this.OnGuessALetterClicked = new DelegateCommand<object>(this.GuessALetterClicked);
 
             this.OnGuessAWordClicked = new DelegateCommand<object>(this.GuessAWordClicked);
@@ -121,7 +127,10 @@
 
             this.OnCloseWrongGuessMessageClicked = new DelegateCommand<object>(this.CloseWrongGuessMessageClicked);
 
+            this.OnCloseCorrectGuessMessageClicked = new DelegateCommand<object>(this.CloseCorrectGuessMessageClicked);
+
             this.c1ButtonVisible = true;
+            this.c2ButtonVisible = true;
 
             this.overlayEnabled = true;
 
@@ -129,14 +138,26 @@
 
             this.wrongGuessMessageVisible = false;
 
+            this.correctGuessMessageVisible = false;
+
             this.TileC1 = new TileViewModel();
 
             this.SetOpponentsWord();
         }
 
+        private string OpponentsWord { get; set; }
+
         private void SetOpponentsWord()
         {
-            var opponentsWord = "BINGO";
+            var fiveLetterWords = File.ReadAllLines("5LetterWords.txt");
+
+            var rand = new Random();
+            var indexOfRandomFiveLetterWord = rand.Next(fiveLetterWords.Length);
+
+            var opponentsWord = fiveLetterWords[indexOfRandomFiveLetterWord].ToUpperInvariant();
+
+            this.OpponentsWord = opponentsWord;
+
             var chars = opponentsWord.ToCharArray();
 
 
@@ -163,6 +184,8 @@
 
         public ICommand OnC1TileClicked { get; }
 
+        public ICommand OnC2TileClicked { get; }
+
         public ICommand OnGuessALetterClicked { get; }
 
         public ICommand OnGuessAWordClicked { get; }
@@ -172,6 +195,8 @@
         public ICommand OnGuessClicked { get; }
 
         public ICommand OnCloseWrongGuessMessageClicked { get; }
+
+        public ICommand OnCloseCorrectGuessMessageClicked { get; }
 
         private bool wordIsValid;
 
@@ -201,6 +226,22 @@
             this.OverlayEnabled = true;
         }
 
+        public void C2Clicked(object obj)
+        {
+            if (!string.IsNullOrEmpty(this.c2BoxText))
+            {
+                // Show letter by hiding button for this cell
+                this.C2ButtonVisible = false;
+            }
+            else
+            {
+                // Show 'miss' image
+                // Hide button for this cell
+            }
+
+            this.OverlayEnabled = true;
+        }
+
         public void GuessALetterClicked(object obj)
         {
             this.OverlayEnabled = false;
@@ -216,6 +257,11 @@
             this.GuessWordBoxVisible = false;
         }
 
+        public void CloseCorrectGuessMessageClicked(object obj)
+        {
+            this.CorrectGuessMessageVisible = false;
+        }
+
         public void CloseWrongGuessMessageClicked(object obj)
         {
             this.WrongGuessMessageVisible = false;
@@ -223,11 +269,13 @@
 
         public void GuessClicked(object obj)
         {
-            bool guessIsCorrect = this.CheckGuess();
+            var guessIsCorrect = this.CheckGuess();
 
             if (guessIsCorrect)
             {
                 // Show correct guess message
+
+                this.CorrectGuessMessageVisible = true;
 
                 // Reveal word on grid
             }
@@ -239,17 +287,24 @@
 
                 this.WrongGuessMessageVisible = true;
             }
-
-            this.GuessWordBoxVisible = false;
         }
+
+        public string GuessedWord { get; set; }
 
         private bool CheckGuess()
         {
+            if (this.GuessedWord.ToUpperInvariant() == this.OpponentsWord)
+            {
+                return true;
+            }
+
             return false;
         }
 
         private bool wrongGuessMessageVisible;
 
+        private bool correctGuessMessageVisible;
+        
         public bool WrongGuessMessageVisible
         {
             get => this.wrongGuessMessageVisible;
@@ -257,6 +312,16 @@
             {
                 this.wrongGuessMessageVisible = value;
                 this.OnPropertyChanged(nameof(this.WrongGuessMessageVisible));
+            }
+        }
+
+        public bool CorrectGuessMessageVisible
+        {
+            get => this.correctGuessMessageVisible;
+            set
+            {
+                this.correctGuessMessageVisible = value;
+                this.OnPropertyChanged(nameof(this.CorrectGuessMessageVisible));
             }
         }
 
@@ -549,6 +614,16 @@
                 {
                     this.RemoveLetter(1, 2);
                 }
+            }
+        }
+
+        public bool C2ButtonVisible
+        {
+            get => this.c2ButtonVisible;
+            set
+            {
+                this.c2ButtonVisible = value;
+                this.OnPropertyChanged(nameof(this.C2ButtonVisible));
             }
         }
 

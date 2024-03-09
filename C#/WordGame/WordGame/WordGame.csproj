@@ -138,5 +138,10 @@
   <ItemGroup>
     <Resource Include="frequency_bigramdictionary_en_243_342.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="5LetterWords.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
