@@ -233,6 +233,10 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
 
+                    <!--<WordGame:LetterCell >
+                    </WordGame:LetterCell>-->
+
+
                     <Grid HorizontalAlignment="Center"
                           VerticalAlignment="Center">
 

@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="LetterCellViewModel.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="OpponentBoardViewModel.cs" />
     <Compile Include="OpponentBoardView.xaml.cs">
@@ -70,13 +71,12 @@
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
     <Compile Include="TileViewModel.cs" />
+    <Compile Include="LetterCell.xaml.cs">
+      <DependentUpon>LetterCell.xaml</DependentUpon>
+    </Compile>
     <Page Include="OpponentBoardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="LetterBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -88,9 +88,6 @@
     </Compile>
     <Compile Include="GameViewModel.cs" />
     <Compile Include="IGamePage.cs" />
-    <Compile Include="LetterBox.xaml.cs">
-      <DependentUpon>LetterBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -101,6 +98,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LetterCell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
