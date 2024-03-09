@@ -160,7 +160,6 @@ namespace WordGame
 
             var chars = opponentsWord.ToCharArray();
 
-
             this.C1BoxText = IsVowel(chars[0]) ? "?" : chars[0].ToString();
             this.C2BoxText = IsVowel(chars[1]) ? "?" : chars[1].ToString();
             this.C3BoxText = IsVowel(chars[2]) ? "?" : chars[2].ToString();
