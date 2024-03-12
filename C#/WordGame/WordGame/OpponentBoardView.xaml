@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:WordGame="clr-namespace:WordGame"
-             d:DataContext="{d:DesignInstance Type=WordGame:OpponentBoardViewModel}"
+             xmlns:wordGame="clr-namespace:WordGame"
+             d:DataContext="{d:DesignInstance Type=wordGame:OpponentBoardViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="450">
@@ -12,8 +12,8 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
-        <DataTemplate DataType="{x:Type WordGame:TileViewModel}">
-            <WordGame:Tile />
+        <DataTemplate DataType="{x:Type wordGame:TileViewModel}">
+            <wordGame:Tile />
         </DataTemplate>
         
     </UserControl.Resources>
@@ -233,8 +233,8 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
 
-                    <!--<WordGame:LetterCell >
-                    </WordGame:LetterCell>-->
+                    <!--<wordGame:LetterCell >
+                    </wordGame:LetterCell>-->
 
 
                     <Grid HorizontalAlignment="Center"
